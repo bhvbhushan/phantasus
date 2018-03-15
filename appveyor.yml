@@ -10,7 +10,7 @@ init:
 install:
     - ps: Bootstrap
       # Get the latest stable version of Node.js or io.js
-      # - ps: Install-Product node $env:nodejs_version
+    - ps: Update-NodeJsInstallation 9.8.0
 
 cache:
   - C:\RLibrary
@@ -29,11 +29,14 @@ build_script:
   - travis-tool.sh install_bioc_deps
 
 test_script:
-  - travis-tool.sh run_tests
+  #- travis-tool.sh run_tests
   # Output useful info for debugging.
   - node --version
   - npm --version
-  # - inst/test_js.sh
+  - R -e "devtools::install('.');q();"
+  - cd inst/www/phantasus.js
+  - npm install
+  - npm run test:karma
 
 on_failure:
   - 7z a failure.zip *.Rcheck\*

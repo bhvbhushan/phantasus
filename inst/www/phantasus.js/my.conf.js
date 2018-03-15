@@ -1,6 +1,25 @@
 // Karma configuration
 // Generated on Fri Jul 21 2017 20:14:52 GMT+0300 (MSK)
 
+var shelljs = require('shelljs');
+var fs = require('fs');
+
+shelljs.mkdir('-p', './jasmine/cache');
+shelljs.cp("../../testdata/GSE27112-GPL6103.rda", './jasmine/cache');
+console.log('Starting phantasus');
+
+var phantasusServer = shelljs.exec('R -e "phantasus::servePhantasus(\'0.0.0.0\', 8000, cacheDir = \'jasmine/cache\', preloadedDir = \'jasmine/cache\', openInBrowser=FALSE)" > server.log 2>&1', {async: true});
+while(true) {
+  if (!fs.existsSync('server.log')) {
+    continue;
+  }
+
+  var log = fs.readFileSync('server.log').toString();
+  if (log.indexOf('Server was started') > -1) {
+    break;
+  }
+}
+
 module.exports = function(config) {
   config.set({
 
