@@ -4,12 +4,10 @@
 \alias{gseaPlot}
 \title{Returns path to an svg file with enrichment plot}
 \usage{
-gseaPlot(fData, fvarLabels, rankBy, selectedGenes, width, height)
+gseaPlot(es, rankBy, selectedGenes, width, height)
 }
 \arguments{
-\item{fData}{list of annotation columns}
-
-\item{fvarLabels}{vector of column names}
+\item{es}{Expression set object}
 
 \item{rankBy}{name of the numeric column used for gene ranking}
 
