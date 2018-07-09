@@ -14722,6 +14722,10 @@ phantasus.gseaTool = function (project) {
     options: rows,
     value: _.first(rows),
     type: 'select'
+  }, {
+    name: 'vertical',
+    type: 'checkbox',
+    value: false
   }/*, {
     name: 'chart_width',
     type: 'range',
@@ -14759,6 +14763,7 @@ phantasus.gseaTool = function (project) {
   }, 500);
 
   this.formBuilder.$form.on('change', 'select', onChange);
+  this.formBuilder.$form.on('change', 'input', onChange);
   project.getRowSelectionModel().on('selectionChanged.chart', onChange);
 
 
@@ -14816,8 +14821,14 @@ phantasus.gseaTool.prototype = {
       return acc;
     }, {});
 
-    var height = 2;//this.formBuilder.getValue('chart_height');
-    var width = 2;//this.formBuilder.getValue('chart_width');
+    var vertical = this.formBuilder.getValue('vertical');
+
+    var height = 4;//this.formBuilder.getValue('chart_height');
+    var width = 6;//this.formBuilder.getValue('chart_width');
+    if (vertical) {
+        height = 6;
+        width = 3;
+    }
 
 
     var req = ocpu.call('gseaPlot', {
@@ -14826,7 +14837,8 @@ phantasus.gseaTool.prototype = {
       rankBy: rankBy,
       selectedGenes: idxs,
       width: width,
-      height: height
+      height: height,
+      vertical: vertical
     }, function (session) {
       session.getObject(function (filenames) {
         var svgPath = JSON.parse(filenames)[0];
@@ -14844,7 +14856,7 @@ phantasus.gseaTool.prototype = {
   },
   draw: function (url) {
     this.$chart.empty();
-    var svg = $('<img src="' + url + '">');
+    var svg = $('<img src="' + url + '" style="max-width: 100%; height: 100%">');
     svg.appendTo(this.$chart);
   }
 };
